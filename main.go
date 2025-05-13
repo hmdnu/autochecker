@@ -1,21 +1,17 @@
 package main
 
 import (
-	"fmt"
-	"log"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/hmdnu/autocheck/service"
 )
 
 func main() {
-	cookie, err := service.GetCookie()
-	if err != nil {
-		log.Fatalln("error getting the cookie", err)
-	}
-	responses, err := service.CheckIn(cookie.Token, cookie.Uid)
-	if err != nil {
-		log.Fatalln("error when checked in", err)
-	}
+	service.AutoCheck()
 
-	fmt.Println(responses)
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	<-c
 }

@@ -4,12 +4,14 @@ GOBUILD=$(GOCMD) build
 GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOFMT=$(GOCMD) fmt
-BINARY_NAME=main
+BINARY_NAME=hoyocheck
 TARGET=cmd
+DIR=bin
+
 
 # Build the project
 build:
-	$(GOBUILD) -o $(BINARY_NAME)
+	$(GOBUILD) -o ./$(DIR)/$(BINARY_NAME)
 
 # Run tests
 test:
@@ -26,6 +28,6 @@ clean:
 
 # Run the application
 run: build
-	./$(BINARY_NAME)
+	./$(DIR)/$(BINARY_NAME)
 
 .PHONY: build test fmt clean run

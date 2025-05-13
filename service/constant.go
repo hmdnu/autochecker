@@ -23,3 +23,10 @@ var Games = []Game{
 		ActId:    "e202303301540311",
 	},
 }
+
+var Status = map[int]string{
+	0:      "check in success",
+	-5003:  "already checked in for today",
+	-100:   "cookie invalid",
+	-10002: "you have not played this game yet",
+}

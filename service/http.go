@@ -15,18 +15,7 @@ type Response struct {
 	Game    string
 }
 
-func CheckIn(token string, uid string) ([]Response, error) {
-	parsedCookie := fmt.Sprintf("ltoken_v2=%s; ltuid_v2=%s", token, uid)
-
-	res, err := makeRequest(parsedCookie)
-	if err != nil {
-		return nil, fmt.Errorf("error checked in: %w", err)
-	}
-
-	return res, nil
-}
-
-func makeRequest(cookie string) ([]Response, error) {
+func MakeRequest(cookie string) ([]Response, error) {
 	var responses []Response
 	client := &http.Client{}
 
