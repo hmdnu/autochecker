@@ -1,8 +1,8 @@
-package account
+package service
 
 import (
 	"encoding/json"
-	"myapp/helper"
+	"myapp/handler"
 	"os"
 )
 
@@ -28,7 +28,7 @@ func ReadAccount() ([]Account, error) {
 }
 
 func AddAccount(account Account) error {
-	if err := helper.EnsureFileExist(ACCOUNT_DIR); err != nil {
+	if err := handler.EnsureFileExist(ACCOUNT_DIR); err != nil {
 		return err
 	}
 	accounts, err := ReadAccount()
@@ -36,7 +36,7 @@ func AddAccount(account Account) error {
 		return err
 	}
 	accounts = append(accounts, account)
-	if err := helper.WriteIntoJson(ACCOUNT_DIR, accounts); err != nil {
+	if err := handler.WriteIntoJson(ACCOUNT_DIR, accounts); err != nil {
 		return err
 	}
 	return nil
@@ -55,6 +55,6 @@ func DeleteAccount(id string) error {
 		}
 	}
 	accounts = append(accounts[:indexToDelete], accounts[indexToDelete+1:]...)
-	err = helper.WriteIntoJson(string(ACCOUNT_DIR), accounts)
+	err = handler.WriteIntoJson(string(ACCOUNT_DIR), accounts)
 	return nil
 }

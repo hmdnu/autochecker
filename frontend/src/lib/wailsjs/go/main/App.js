@@ -6,6 +6,10 @@ export function HandleAddAccount(arg1) {
   return window['go']['main']['App']['HandleAddAccount'](arg1);
 }
 
+export function HandleCheck() {
+  return window['go']['main']['App']['HandleCheck']();
+}
+
 export function HandleDeleteAccount(arg1) {
   return window['go']['main']['App']['HandleDeleteAccount'](arg1);
 }

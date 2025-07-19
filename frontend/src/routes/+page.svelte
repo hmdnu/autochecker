@@ -1,16 +1,19 @@
 <script lang="ts">
-	import type { account } from '@/wailsjs/go/models';
+	import type { service } from '@/wailsjs/go/models';
 	import * as Table from '$lib/components/ui/table/index.js';
-	import { Button } from '$lib/components/ui/button/index.js';
+	import * as Popover from '$lib/components/ui/popover/index.js';
+	import { Button, buttonVariants } from '$lib/components/ui/button/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
-	import { HandleAddAccount, HandleDeleteAccount, HandleReadAccount } from '@/wailsjs/go/main/App';
+	import {
+		HandleAddAccount,
+		HandleCheck,
+		HandleDeleteAccount,
+		HandleReadAccount
+	} from '@/wailsjs/go/main/App';
 	import { onMount } from 'svelte';
 	import { nanoid } from 'nanoid';
-	import Alerts from './components/Alerts.svelte';
 	import { toast } from 'svelte-sonner';
-
-	let isAlert = $state(false);
-	let getUsers = $state([] as account.Account[] | void);
+	let getUsers = $state([] as service.Account[] | void);
 	let user = $state({
 		name: '',
 		token: '',
@@ -23,22 +26,18 @@
 		try {
 			getUsers = await HandleReadAccount();
 		} catch (err) {
+			console.error(err);
 			toast.error('Error retrieving accounts', {
 				description: `${err}`
 			});
 		}
 	}
 	async function manualCheckIn() {
-		toast.loading('Checking in...', {
-			duration: 900
+		toast.promise(HandleCheck(), {
+			loading: 'Getting your rewards...',
+			success: 'Success',
+			error: (err) => `Error checking in: ${err}`
 		});
-		setTimeout(() => {
-			toast.success('Successfully checked in', {
-				closeButton: true
-			});
-		}, 1000);
-
-		isAlert = true;
 	}
 	async function addAccount(e: SubmitEvent) {
 		e.preventDefault();
@@ -80,9 +79,6 @@
 
 <div class="mb-5">
 	<Button onclick={manualCheckIn} class="mb-5">Manual Check In</Button>
-	{#if isAlert}
-		<Alerts variant="default" bind:isAlert />
-	{/if}
 </div>
 
 <div class="mb-10">
@@ -108,16 +104,36 @@
 			</Table.Row>
 		</Table.Header>
 		<Table.Body>
-			{#if (getUsers as account.Account[]).length === 0}
+			{#if (getUsers as service.Account[]).length === 0}
 				<p class="mt-2.5">No Account</p>
 			{:else}
-				{#each getUsers as account.Account[] as user}
+				{#each getUsers as service.Account[] as user}
 					<Table.Row>
 						<Table.Cell>{user.Name}</Table.Cell>
-						<Table.Cell>{user.Token}</Table.Cell>
+						<Table.Cell>
+							<Popover.Root>
+								<Popover.Trigger class={buttonVariants({ variant: 'outline', size: 'sm' })}>
+									View Token
+								</Popover.Trigger>
+								<Popover.Content class="flex h-max items-center gap-1.5">
+									<p class="truncate text-xs" id="user-token">{user.Token}</p>
+									<Button
+										variant="link"
+										size="sm"
+										class="px-0 py-0 text-xs"
+										onclick={() => {
+											const token = document.getElementById('user-token');
+											if (token) {
+												navigator.clipboard.writeText(token.innerHTML);
+												toast.info('Token copied');
+											}
+										}}>copy</Button
+									>
+								</Popover.Content>
+							</Popover.Root>
+						</Table.Cell>
 						<Table.Cell>{user.Uid}</Table.Cell>
 						<Table.Cell>
-							<Button variant="secondary" size="sm" class="mr-2.5">Edit</Button>
 							<Button variant="destructive" size="sm" onclick={() => deleteAccount(user.Id)}
 								>Delete</Button
 							>

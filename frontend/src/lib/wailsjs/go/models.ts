@@ -1,4 +1,4 @@
-export namespace account {
+export namespace service {
 	
 	export class Account {
 	    Id: string;

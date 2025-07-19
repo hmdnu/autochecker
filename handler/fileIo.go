@@ -1,4 +1,4 @@
-package helper
+package handler
 
 import (
 	"encoding/json"
@@ -13,6 +13,10 @@ func CheckFileExist(dir string) bool {
 
 func EnsureFileExist(dir string) error {
 	if !CheckFileExist(dir) {
+		err := os.Mkdir("data", 0700)
+		if err != nil {
+			return err
+		}
 		file, err := os.Create(dir)
 		if err != nil {
 			return err
