@@ -1,5 +1,16 @@
-<script>
+<script lang="ts">
 	import * as Table from '$lib/components/ui/table/index.js';
+	import { HandleReadLog } from '@/wailsjs/go/main/App';
+	import { onMount } from 'svelte';
+
+	onMount(async () => {
+		try {
+			const logs = await HandleReadLog();
+			console.log(logs);
+		} catch (err) {
+			console.error('error', err);
+		}
+	});
 </script>
 
 <Table.Root class="font-medium">

@@ -1,33 +1,66 @@
 package service
 
-import "myapp/handler"
+import (
+	"encoding/json"
+	"myapp/handler"
+	"os"
+	"time"
+)
 
 type Response struct {
 	Id          string
 	AccountName string
+	DateCheck   string
 	Game        []handler.GameResponse
 }
 
+const LOG_DIR = "data/log.json"
+
 func HandleCheck() ([]Response, error) {
-	var responses []Response
 	accounts, err := ReadAccount()
 	if err != nil {
 		return nil, err
 	}
+	existingLogs, err := ReadLogs()
+	if err != nil {
+		return nil, err
+	}
 	for _, account := range accounts {
-		res, err := handler.Fetch(account.Token, account.Uid)
+		gameResponses, err := handler.Fetch(account.Token, account.Uid)
 		if err != nil {
 			return nil, err
 		}
-		responses = append(responses, Response{
+		existingLogs = append(existingLogs, Response{
 			Id:          account.Id,
 			AccountName: account.Name,
-			Game:        res,
+			DateCheck:   time.Now().Format(time.RFC1123),
+			Game:        gameResponses,
 		})
 	}
-	return responses, nil
+	if err := writeTofile(existingLogs); err != nil {
+		return nil, err
+	}
+	return existingLogs, nil
 }
 
-func writeTofile() {
+func writeTofile(responses []Response) error {
+	if err := handler.EnsureFileExist(LOG_DIR); err != nil {
+		return err
+	}
+	if err := handler.WriteIntoJson(LOG_DIR, responses); err != nil {
+		return err
+	}
+	return nil
+}
 
+func ReadLogs() ([]Response, error) {
+	byte, err := os.ReadFile(LOG_DIR)
+	if err != nil {
+		return nil, err
+	}
+	var logs []Response
+	if err := json.Unmarshal(byte, &logs); err != nil {
+		return nil, err
+	}
+	return logs, nil
 }

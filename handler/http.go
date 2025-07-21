@@ -43,6 +43,13 @@ var games []Game = []Game{
 	},
 }
 
+var ResponseStatus = map[int]string{
+	0:      "Successfully checked in",
+	-5003:  "Already checked in",
+	-100:   "Cookie invalid",
+	-10002: "You have not played this game",
+}
+
 func Fetch(token string, uid string) ([]GameResponse, error) {
 	client := &http.Client{}
 	var responses []GameResponse
@@ -59,7 +66,7 @@ func Fetch(token string, uid string) ([]GameResponse, error) {
 		responses = append(responses, GameResponse{
 			Name:    game.Name,
 			Data:    response.Data,
-			Message: response.Message,
+			Message: ResponseStatus[response.RetCode],
 			RetCode: response.RetCode,
 		})
 	}

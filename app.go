@@ -47,17 +47,23 @@ func (a *App) HandleReadAccount() ([]service.Account, error) {
 func (a *App) HandleDeleteAccount(id string) error {
 	err := service.DeleteAccount(id)
 	if err != nil {
-		return fmt.Errorf("%e", err)
+		return fmt.Errorf("%s", err.Error())
 	}
 	return nil
 }
 
-func (a *App) HandleCheck() error {
-	resp, err := service.HandleCheck()
+func (a *App) HandleCheck() ([]service.Response, error) {
+	responses, err := service.HandleCheck()
 	if err != nil {
-		return err
+		return nil, fmt.Errorf("%s", err.Error())
 	}
+	return responses, nil
+}
 
-	fmt.Println(resp)
-	return nil
+func (a *App) HandleReadLog() ([]service.Response, error) {
+	logs, err := service.ReadLogs()
+	if err != nil {
+		return nil, fmt.Errorf("%s", err.Error())
+	}
+	return logs, nil
 }

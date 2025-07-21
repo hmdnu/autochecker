@@ -13,7 +13,7 @@ func CheckFileExist(dir string) bool {
 
 func EnsureFileExist(dir string) error {
 	if !CheckFileExist(dir) {
-		err := os.Mkdir("data", 0700)
+		err := os.MkdirAll("data", 0700)
 		if err != nil {
 			return err
 		}

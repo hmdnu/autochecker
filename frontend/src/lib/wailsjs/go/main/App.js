@@ -17,3 +17,7 @@ export function HandleDeleteAccount(arg1) {
 export function HandleReadAccount() {
   return window['go']['main']['App']['HandleReadAccount']();
 }
+
+export function HandleReadLog() {
+  return window['go']['main']['App']['HandleReadLog']();
+}

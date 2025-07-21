@@ -35,8 +35,14 @@
 	async function manualCheckIn() {
 		toast.promise(HandleCheck(), {
 			loading: 'Getting your rewards...',
-			success: 'Success',
-			error: (err) => `Error checking in: ${err}`
+			success: (res) => {
+				console.log(res);
+				return 'Success';
+			},
+			error: (err) => {
+				console.error(err);
+				return `Error checking in: ${err}`;
+			}
 		});
 	}
 	async function addAccount(e: SubmitEvent) {

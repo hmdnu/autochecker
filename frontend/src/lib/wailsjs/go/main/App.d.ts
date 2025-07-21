@@ -4,8 +4,10 @@ import {service} from '../models';
 
 export function HandleAddAccount(arg1:service.Account):Promise<void>;
 
-export function HandleCheck():Promise<void>;
+export function HandleCheck():Promise<Array<service.Response>>;
 
 export function HandleDeleteAccount(arg1:string):Promise<void>;
 
 export function HandleReadAccount():Promise<Array<service.Account>>;
+
+export function HandleReadLog():Promise<Array<service.Response>>;
