@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	helper "myapp/handler"
+	"myapp/handler"
 	"myapp/service"
 )
 
@@ -22,7 +22,7 @@ func NewApp() *App {
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 
-	err := helper.EnsureFileExist(service.ACCOUNT_DIR)
+	err := handler.EnsureFileExist(service.ACCOUNT_DIR)
 	if err != nil {
 		println(err)
 	}

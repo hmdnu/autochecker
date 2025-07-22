@@ -36,11 +36,9 @@
 		toast.promise(HandleCheck(), {
 			loading: 'Getting your rewards...',
 			success: (res) => {
-				console.log(res);
 				return 'Success';
 			},
 			error: (err) => {
-				console.error(err);
 				return `Error checking in: ${err}`;
 			}
 		});
@@ -121,24 +119,21 @@
 								<Popover.Trigger class={buttonVariants({ variant: 'outline', size: 'sm' })}>
 									View Token
 								</Popover.Trigger>
-								<Popover.Content class="flex h-max items-center gap-1.5">
-									<p class="truncate text-xs" id="user-token">{user.Token}</p>
-									<Button
-										variant="link"
-										size="sm"
-										class="px-0 py-0 text-xs"
-										onclick={() => {
-											const token = document.getElementById('user-token');
-											if (token) {
-												navigator.clipboard.writeText(token.innerHTML);
-												toast.info('Token copied');
-											}
-										}}>copy</Button
-									>
+								<Popover.Content class="flex h-max items-center">
+									<p class="truncate text-sm" id="user-token">{user.Token}</p>
 								</Popover.Content>
 							</Popover.Root>
 						</Table.Cell>
-						<Table.Cell>{user.Uid}</Table.Cell>
+						<Table.Cell>
+							<Popover.Root>
+								<Popover.Trigger class={buttonVariants({ variant: 'outline', size: 'sm' })}>
+									View UID
+								</Popover.Trigger>
+								<Popover.Content class="flex h-max w-fit items-center">
+									<p class="truncate text-sm" id="user-token">{user.Uid}</p>
+								</Popover.Content>
+							</Popover.Root>
+						</Table.Cell>
 						<Table.Cell>
 							<Button variant="destructive" size="sm" onclick={() => deleteAccount(user.Id)}
 								>Delete</Button
