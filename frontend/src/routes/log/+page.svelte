@@ -37,7 +37,7 @@
 	let value = $state('');
 	const triggerContent = $derived(filter.find((f) => f.value === value)?.label ?? 'Filter');
 
-	const filteredLogs = $derived.by(() => {
+	function filterLogs(value: string) {
 		switch (value) {
 			case 'today':
 				return logs?.filter((log) => {
@@ -52,6 +52,10 @@
 			default:
 				return logs;
 		}
+	}
+
+	const filteredLogs = $derived.by(() => {
+		return filterLogs(value);
 	});
 </script>
 
